@@ -2,6 +2,8 @@ import express, { urlencoded } from "express";
 import authRouter from "./Routes/AuthRoutes.js";
 import passport from "passport";
 import bodyParser from "body-parser";
+import { configDotenv } from "dotenv";
+configDotenv();
 
 // App instance
 const app = express();
