@@ -4,8 +4,8 @@ import { Strategy as JwtStrategy, ExtractJwt } from "passport-jwt";
 const opts = {
     jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
     secretOrKey: process.env.JWT_SECRET,
-    issuer: "TaskMaster.com",
-    audience: "TaskMaster.net",
+    issuer: process.env.issuer,
+    audience: process.env.audience,
 };
 
 export default passport.use(

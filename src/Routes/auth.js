@@ -10,12 +10,9 @@ import {
 const authRouter = Router();
 
 // Login Route
-authRouter.post(
-  "/auth/login",
-  passport.authenticate("local", { session: false }),
-  loginController
-);
+authRouter.post("/login",loginController);
 
-authRouter.post("/auth/register", registerController);
+// Register Route
+authRouter.post("/register", registerController);
 
 export default authRouter;

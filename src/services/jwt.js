@@ -1,8 +1,8 @@
 import jwt from "jsonwebtoken"
 
 const privateKey = process.env.JWT_SECRET;
-const issuer = process.env.issuer;
-const audience =  process.env.audience;
+const issuer = process.env.ISSUER;
+const audience =  process.env.AUDIENCE;
 
 
 export function GenerateJwtToken(User) {
@@ -17,6 +17,3 @@ export function GenerateJwtToken(User) {
     );
 }
 
-export function VerifyJwtToken(token) {
-    return jwt.verify(token, privateKey, { issuer: issuer, audience: audience });
-}

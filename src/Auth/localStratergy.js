@@ -3,7 +3,6 @@ import { Strategy as LocalStratergy } from "passport-local";
 import { findUserByEmail } from "../services/database.js";
 import { comparePassword } from "../services/bcrypt.js";
 
-
 export default passport.use(
   new LocalStratergy(
     { usernameField: "email" },
