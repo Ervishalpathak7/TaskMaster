@@ -12,3 +12,13 @@ export async function findUserByEmail(email) {
         }
     });
 }
+
+export async function saveUser(name, email, password) {
+    return await prismaClient.user.create({
+        data: {
+            name: name,
+            email: email,
+            password: password
+        }
+    });
+}
