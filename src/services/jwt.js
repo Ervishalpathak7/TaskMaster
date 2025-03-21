@@ -1,14 +1,10 @@
 import jwt from "jsonwebtoken"
-import crypto from "crypto";
 
-
-const { privateKey, publicKey } = crypto.generateKeyPairSync("rsa", {
-    modulusLength: 2048,
-});
+const privateKey = process.env.JWT_SECRET;
 
 export function GenerateJwtToken(User) {
     return new Promise((resolve, reject) => {
-        jwt.sign({ username: User.username }, privateKey, { algorithm: 'RS256' }, function (err, token) {
+        jwt.sign({ username: User.username }, privateKey, { algorithm: 'HS256' }, function (err, token) {
             if (err) {
                 console.error("Error generating JWT token:", err);
                 reject(err);

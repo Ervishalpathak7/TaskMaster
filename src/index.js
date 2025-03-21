@@ -9,7 +9,7 @@ configDotenv();
 const app = express();
 
 // Port
-const port = 3000;
+const port = process.env.PORT;
 
 // Middlewares
 app.use(urlencoded({ extended: true }))
