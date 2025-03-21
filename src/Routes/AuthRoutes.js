@@ -1,6 +1,6 @@
 import { Router } from "express";
 import passport from "passport";
-import "../services/auth.js";
+import "../Auth/localStratergy.js";
 import {
   loginController,
   registerController,

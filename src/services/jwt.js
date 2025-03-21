@@ -1,29 +1,22 @@
 import jwt from "jsonwebtoken"
 
 const privateKey = process.env.JWT_SECRET;
+const issuer = process.env.issuer;
+const audience =  process.env.audience;
+
 
 export function GenerateJwtToken(User) {
-    return new Promise((resolve, reject) => {
-        jwt.sign({ username: User.username }, privateKey, { algorithm: 'HS256' }, function (err, token) {
-            if (err) {
-                console.error("Error generating JWT token:", err);
-                reject(err);
-                return;
-            }
-            resolve(token);
-        });
-    });
+    return jwt.sign(
+        { id : User.id ,email: User.email, role: User.role },
+        privateKey,
+        {
+            expiresIn: "1h",
+            issuer: issuer,
+            audience: audience,
+        }
+    );
 }
 
 export function VerifyJwtToken(token) {
-    return new Promise((resolve, reject) => {
-        jwt.verify(token, publicKey, function(err, decoded) {
-            if (err) {
-                console.error("Error verifying JWT token:", err);
-                reject(err);
-                return;
-            }
-            resolve(decoded);
-        });
-    });
+    return jwt.verify(token, privateKey, { issuer: issuer, audience: audience });
 }

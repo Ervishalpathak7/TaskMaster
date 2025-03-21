@@ -3,6 +3,7 @@ import authRouter from "./Routes/AuthRoutes.js";
 import passport from "passport";
 import bodyParser from "body-parser";
 import { configDotenv } from "dotenv";
+import "./Auth/jwtStrategy.js"
 configDotenv();
 
 // App instance
@@ -18,6 +19,10 @@ app.use(passport.initialize());
 
 
 app.use('/', authRouter);
+app.get("/protected", passport.authenticate("jwt", { session: false }), (req, res) => {
+    console.log(req);
+    res.json({ message: "You have access!", user: req.user });
+});
 
 
 app.listen(port, () => {

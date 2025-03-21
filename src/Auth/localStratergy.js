@@ -1,11 +1,11 @@
 import passport from "passport";
-import { Strategy } from "passport-local";
-import { findUserByEmail } from "./database.js";
-import { comparePassword } from "./bcrypt.js";
+import { Strategy as LocalStratergy } from "passport-local";
+import { findUserByEmail } from "../services/database.js";
+import { comparePassword } from "../services/bcrypt.js";
 
 
 export default passport.use(
-  new Strategy(
+  new LocalStratergy(
     { usernameField: "email" },
     async (email, password, done) => {
       try {

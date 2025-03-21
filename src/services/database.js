@@ -22,3 +22,12 @@ export async function saveUser(name, email, password) {
         }
     });
 }
+
+export async function deleteAll() {
+    try {
+        return await prismaClient.user.deleteMany();
+    } catch (error) {
+        console.error("Error deleting all users:", error);
+        throw error;
+    }
+}

@@ -2,13 +2,12 @@ import { findUserByEmail, saveUser } from "../services/database.js";
 import { GenerateJwtToken } from "../services/jwt.js";
 import {hashPassword} from "../services/bcrypt.js"
 
-
 export async function loginController(req , res) {
     try {
         let user = req.user;
         if(!user) throw new Error("authentication failed");
-        const token = await GenerateJwtToken(user);
-        res.json(token);
+        const token = GenerateJwtToken(user);
+        res.json({message : "User logged in Successfully", token});
     } catch (error) {
         res.status(401).json({message : error.message});
     }
