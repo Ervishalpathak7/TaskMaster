@@ -1,5 +1,7 @@
 import { findUserByEmail, saveUser } from "../services/database.js";
 import { GenerateJwtToken } from "../services/jwt.js";
+import {hashPassword} from "../services/bcrypt.js"
+
 
 export async function loginController(req , res) {
     try {
@@ -16,10 +18,14 @@ export async function registerController(req , res){
     try {
         const { name , email , password} = req.body;
         if(!name || !email || !password) throw new Error("Invalid user data");
+
         const existingUser = await findUserByEmail(email);
         if(existingUser) throw new Error("email already exist");
-        const user = await saveUser(name , email , password);
+
+        const hashedPassword = await hashPassword(password)
+        const user = await saveUser(name , email , hashedPassword);
         user.password = undefined;
+        
         res.json({message : "User register Successfully", user});
     } catch (error) {
         res.status(401).json({message: error.message});

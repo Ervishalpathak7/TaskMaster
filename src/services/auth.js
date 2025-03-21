@@ -1,6 +1,7 @@
 import passport from "passport";
 import { Strategy } from "passport-local";
 import { findUserByEmail } from "./database.js";
+import { comparePassword } from "./bcrypt.js";
 
 
 export default passport.use(
@@ -10,7 +11,7 @@ export default passport.use(
       try {
         let finduser = await findUserByEmail(email);
         if (!finduser) throw new Error("Invalid Username");
-        if (finduser.password !== password) throw new Error("Invalid Credentials");
+        if (!comparePassword(password , finduser.password)) throw new Error("Invalid Credentials");
         done(null, finduser);
       } catch (error) {
         done(error, null);
