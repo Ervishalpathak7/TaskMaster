@@ -1,12 +1,12 @@
 import passport from "passport";
 import { Strategy } from "passport-local";
-import { users } from "../mocks/users.js";
+import { findUserByEmail } from "./database.js";
 
 
-export default passport.use(
-  new Strategy((username, password, done) => {
+export default  passport.use(
+  new Strategy(async (username, password, done) => {
     try {
-      let finduser = users.find((user) => user.username === username);
+      let finduser = await findUserByEmail(username);
       if (!finduser) throw new Error("Invalid Username");
       if (finduser.password !== password) throw new Error("Invalid Credentials");
       done(null, finduser);
