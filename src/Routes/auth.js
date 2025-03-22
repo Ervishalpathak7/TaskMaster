@@ -4,7 +4,7 @@ import "../Auth/localStratergy.js";
 import {
   loginController,
   registerController,
-} from "../Controllers/AuthControllers.js";
+} from "../Controllers/authControllers.js";
 
 // Express router for Authentication
 const authRouter = Router();
