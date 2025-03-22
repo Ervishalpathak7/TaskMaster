@@ -1,6 +1,8 @@
 import { Router } from "express";
 import authRouter from "./auth.js";
 import passport from "passport";
+import "../Auth/jwtStrategy.js"
+import projectRouter from "./project.js";
 
 const router = Router();
 
@@ -16,5 +18,6 @@ router.use((req, res, next) => {
 
 // Routes
 router.use('/', authRouter);
+router.use('/api' , projectRouter)
 
 export default router;

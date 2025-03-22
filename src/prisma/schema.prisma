@@ -11,7 +11,28 @@ model User {
   id        Int      @id @default(autoincrement())
   createdAt DateTime @default(now())
   email     String   @unique
-  name      String?
+  name      String
   password  String 
   role      String[]  @default(["user"])
+  projects   Project[]
+  tasks      Task[]
+}
+
+model Project {
+  id          Int @id @default(autoincrement())
+  name        String
+  description String?
+  tasks       Task[]
+  owner       User   @relation(fields: [ownerId], references: [id])
+  ownerId     Int
+}
+
+model Task {
+  id          Int @id @default(autoincrement())
+  name        String
+  description String?
+  project     Project @relation(fields: [projectId], references: [id])
+  projectId   Int
+  assignees   User[]
+  deadline    DateTime
 }
