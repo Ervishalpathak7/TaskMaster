@@ -1,4 +1,4 @@
-import { findUserByEmail, saveUser } from "../services/database.js";
+import { findUserByEmail, saveUser } from "../repositories/userRepo.js";
 import { GenerateJwtToken } from "../services/jwt.js";
 import {hashPassword} from "../services/bcrypt.js"
 import passport from "passport";

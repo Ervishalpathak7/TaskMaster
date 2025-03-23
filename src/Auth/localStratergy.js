@@ -1,6 +1,6 @@
 import passport from "passport";
 import { Strategy as LocalStratergy } from "passport-local";
-import { findUserByEmail } from "../services/database.js";
+import { findUserByEmail } from "../repositories/userRepo.js";
 import { comparePassword } from "../services/bcrypt.js";
 
 export default passport.use(

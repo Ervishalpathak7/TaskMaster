@@ -1,4 +1,4 @@
-import { getprojectInfo, removeProject, saveProject, updateProject } from "../services/database.js";
+import { getprojectInfo, removeProject, saveProject, updateProject } from "../repositories/projectRepo.js";
 
 export async function createProjectController(req, res){
     try {
