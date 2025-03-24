@@ -15,6 +15,19 @@ export async function findUserByEmail(email) {
     }
 }
 
+export async function findUserByID(userId){
+    try {
+        return await prismaClient.user.findUnique({
+            where : {
+                id : userId
+            }
+        })
+    } catch (error) {
+        console.error("error while finding user by id " , error)
+        throw error;
+    }
+}
+
 export async function saveUser(name, email, password) {
     try {
         return await prismaClient.user.create({
