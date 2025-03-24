@@ -7,32 +7,40 @@ generator client {
   provider = "prisma-client-js"
 }
 
-model User {
-  id        Int      @id @default(autoincrement())
+model Users {
+  id        String   @id @default(uuid()) 
   createdAt DateTime @default(now())
   email     String   @unique
   name      String
   password  String 
   role      String[]  @default(["user"])
-  projects   Project[]
-  tasks      Task[]
+  projects  Projects[]
+  tasks     Tasks[] @relation("TaskAssignees")
+  RefreshToken RefreshTokens?
 }
 
-model Project {
-  id          Int @id @default(autoincrement())
+model Projects {
+  id          String @id @default(uuid())
   name        String
   description String?
-  tasks       Task[]
-  owner       User   @relation(fields: [ownerId], references: [id])
-  ownerId     Int
+  tasks       Tasks[]
+  owner       Users   @relation(fields: [ownerId], references: [id], onDelete: Cascade)
+  ownerId     String
 }
 
-model Task {
-  id          Int @id @default(autoincrement())
+model Tasks {
+  id          Int    @id @default(autoincrement())
   name        String
   description String?
-  project     Project @relation(fields: [projectId], references: [id])
-  projectId   Int
-  assignees   User[]
+  projectRelation Projects @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  projectId   String
+  assignees   Users[] @relation("TaskAssignees")
   deadline    DateTime
+}
+
+model RefreshTokens {
+  id     String  @id @default(uuid())
+  user   Users   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  token  String
+  userId String   @unique
 }
