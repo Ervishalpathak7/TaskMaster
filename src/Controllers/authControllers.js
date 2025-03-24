@@ -1,4 +1,4 @@
-import { deleteAll, findUserByEmail, getAllUsers, saveUser } from "../repositories/userRepo.js";
+import { deleteAll, findUserByEmail, saveUser } from "../repositories/userRepo.js";
 import { generateAccessAndRefreshTokens } from "../services/jwt.js";
 import passport from "passport";
 import { validateEmail } from "../utils/validateEmail.js";
@@ -15,14 +15,12 @@ export async function loginController(req, res, next) {
         if (!user) {
             return res.status(401).json({ message: info ? info.message : "Authentication failed" });
         }
-        // Generate JWT Token
-        const accessToken = generateAcessToken(user);
-        const refreshToekn = generateRefereshToken(user);
-
+        user.password = undefined;
+        const tokens = await generateAccessAndRefreshTokens(user.id);
         return res.json({ 
             message: "User logged in successfully", 
-            "access-token ": accessToken ,
-            "refresh-token" : refreshToekn 
+            user,
+            tokens
         });
     }
     )(req, res, next);

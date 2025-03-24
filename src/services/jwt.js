@@ -25,7 +25,6 @@ export function generateRefreshToken(userId){
 export async function generateAccessAndRefreshTokens(userId) {
   try {
     const user = await findUserByID(userId);
-
     if(!user) throw new Error("user not found with given id")
     const accessToken = generateAccessToken(userId);
     const refreshToken = generateRefreshToken(userId);

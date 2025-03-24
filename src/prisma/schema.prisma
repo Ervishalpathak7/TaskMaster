@@ -13,7 +13,6 @@ model Users {
   email     String   @unique
   name      String
   password  String 
-  role      String[]  @default(["user"])
   projects  Projects[]
   tasks     Tasks[] @relation("TaskAssignees")
   RefreshToken RefreshTokens?
