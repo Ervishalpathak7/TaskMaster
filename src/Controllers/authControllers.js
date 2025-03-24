@@ -1,5 +1,5 @@
-import { deleteAll, findUserByEmail, saveUser } from "../repositories/userRepo.js";
-import { generateAccessAndRefreshTokens } from "../services/jwt.js";
+import { findUserByEmail, saveUser } from "../repositories/userRepo.js";
+import { generateAccessAndRefreshTokens, validateRefreshToken } from "../services/jwt.js";
 import passport from "passport";
 import { validateEmail } from "../utils/validateEmail.js";
 import bcrypt from "bcryptjs";
@@ -10,7 +10,7 @@ import "../Auth/localStratergy.js"
 export async function loginController(req, res, next) {
     passport.authenticate('local', async (err, user, info) => {
         if (err) {
-            return res.status(500).json({ message: "Internal Server Error" });
+            return res.status(500).json({ message: err.message });
         }
         if (!user) {
             return res.status(401).json({ message: info ? info.message : "Authentication failed" });
@@ -52,5 +52,18 @@ export async function registerController(req , res){
 
     } catch (error) {
         res.status(401).json({message: error.message});
+    }
+}
+
+// refresh token controller 
+export async function refreshTokenController( req , res ){
+    try {
+        const { refreshToken } = req.body;
+        const userId = await validateRefreshToken(refreshToken);
+        if(!userId) return res.status(401).json({message : "unauthorized"});
+        const tokens = await generateAccessAndRefreshTokens(userId);
+        res.status(200).json({tokens});
+    } catch (error) {
+        res.status(500).json({message : error.message})
     }
 }

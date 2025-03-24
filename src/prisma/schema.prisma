@@ -40,6 +40,6 @@ model Tasks {
 model RefreshTokens {
   id     String  @id @default(uuid())
   user   Users   @relation(fields: [userId], references: [id], onDelete: Cascade)
-  token  String
+  token  String   @unique
   userId String   @unique
 }

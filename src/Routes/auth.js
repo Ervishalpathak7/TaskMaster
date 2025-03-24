@@ -1,8 +1,8 @@
 import { Router } from "express";
-import passport from "passport";
 import "../Auth/localStratergy.js";
 import {
   loginController,
+  refreshTokenController,
   registerController,
 } from "../Controllers/authControllers.js";
 
@@ -14,5 +14,8 @@ authRouter.post("/login",loginController);
 
 // Register Route
 authRouter.post("/register", registerController);
+
+// Refresh Token Route
+authRouter.post("/refresh", refreshTokenController)
 
 export default authRouter;

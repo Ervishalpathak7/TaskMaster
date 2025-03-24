@@ -1,6 +1,7 @@
 import jwt from "jsonwebtoken"
 import { findUserByID } from "../repositories/userRepo.js";
 import { saveRefreshToken } from "../repositories/refreshTokenRepo.js";
+import prismaClient from "../prisma/client.js";
 
 const privateKey = process.env.JWT_SECRET;
 const issuer = process.env.ISSUER;
@@ -38,3 +39,21 @@ export async function generateAccessAndRefreshTokens(userId) {
   }
 };
 
+
+export async function validateRefreshToken(token){
+  try {
+    const refreshToken = await prismaClient.refreshTokens.findUnique({
+      where: {
+        token: token
+      },
+      select: {
+        userId: true
+      }
+    });
+    if (!refreshToken) return false;
+    return refreshToken.userId;
+  } catch (error) {
+    console.error("Error validating refresh token:", error);
+    throw error;
+  }
+}

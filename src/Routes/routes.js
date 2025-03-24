@@ -8,7 +8,7 @@ const router = Router();
 
 // Authentication Middleware
 router.use((req, res, next) => {
-    const excludedRoutes = ["/login", "/register"];
+    const excludedRoutes = ["/login", "/register", "/refresh"];
     if (excludedRoutes.includes(req.path)) {
         return next();
     }
