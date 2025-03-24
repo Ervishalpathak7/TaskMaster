@@ -1,5 +1,6 @@
 import jwt from "jsonwebtoken"
 import { findUserByID } from "../repositories/userRepo.js";
+import { saveRefreshToken } from "../repositories/refreshTokenRepo.js";
 
 const privateKey = process.env.JWT_SECRET;
 const issuer = process.env.ISSUER;
@@ -24,13 +25,12 @@ export function generateRefreshToken(userId){
 export async function generateAccessAndRefreshTokens(userId) {
   try {
     const user = await findUserByID(userId);
-    if(!user) throw new Error("user not found with given id")
 
+    if(!user) throw new Error("user not found with given id")
     const accessToken = generateAccessToken(userId);
     const refreshToken = generateRefreshToken(userId);
 
-    // TODO: Save refresh token in database 
-    // await  saveRefreshToken(refreshToken);
+    await  saveRefreshToken(refreshToken , userId);
     return { accessToken, refreshToken };
 
   } catch (error) {

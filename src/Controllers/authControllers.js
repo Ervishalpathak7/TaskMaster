@@ -1,4 +1,4 @@
-import { findUserByEmail, saveUser } from "../repositories/userRepo.js";
+import { deleteAll, findUserByEmail, getAllUsers, saveUser } from "../repositories/userRepo.js";
 import { generateAccessAndRefreshTokens } from "../services/jwt.js";
 import passport from "passport";
 import { validateEmail } from "../utils/validateEmail.js";
@@ -31,6 +31,7 @@ export async function loginController(req, res, next) {
 // register controller
 export async function registerController(req , res){
     try {
+
         const { name , email , password} = req.body;
         if(!name || !email || !password) throw new Error("Invalid user data");
 
@@ -40,9 +41,10 @@ export async function registerController(req , res){
         if(existingUser) return res.status(400).json({message : "Email Already Exist"});
 
         const hashedPassword = await bcrypt.hash(password, 10);
-        const user = await saveUser(name , email , hashedPassword);        
 
-        const tokens = generateAccessAndRefreshTokens(user.id);
+        const user = await saveUser(name , email , hashedPassword);
+        const tokens = await generateAccessAndRefreshTokens(user.id);
+
         res.json({ 
             message: "User registered successfully", 
             user: 
