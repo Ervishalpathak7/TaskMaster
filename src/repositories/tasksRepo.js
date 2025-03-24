@@ -15,7 +15,7 @@ export async function createTask(projectId, userId, name, description, deadline,
     try {
         await validateProjectOwnership(userId, projectId);
 
-        return await prismaClient.task.create({
+        return await prismaClient.tasks.create({
             data: {
                 name,
                 description,
@@ -34,14 +34,14 @@ export async function deleteTask(userId, projectId, taskId) {
     try {
         await validateProjectOwnership(userId, projectId);
 
-        await prismaClient.task.findFirstOrThrow({
+        await prismaClient.tasks.findFirstOrThrow({
             where: {
                 id: taskId,
                 projectId
             }
         });
 
-        return await prismaClient.task.delete({
+        return await prismaClient.tasks.delete({
             where: {
                 id: taskId
             }
@@ -56,7 +56,7 @@ export async function getTask(userId, projectId, taskId) {
     try {
         await validateProjectOwnership(userId, projectId);
 
-        const task = await prismaClient.task.findFirst({
+        const task = await prismaClient.tasks.findFirst({
             where: {
                 id: taskId,
                 projectId
