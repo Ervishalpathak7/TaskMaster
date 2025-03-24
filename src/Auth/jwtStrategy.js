@@ -5,7 +5,6 @@ const opts = {
     jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
     secretOrKey: process.env.JWT_SECRET,
     issuer: process.env.issuer,
-    audience: process.env.audience,
 };
 
 export default passport.use(
