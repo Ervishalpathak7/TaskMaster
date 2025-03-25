@@ -28,12 +28,27 @@ export async function findUserByID(userId){
     }
 }
 
-export async function saveUser(name, email, password) {
+export async function findUserByUsername(username){
+    try {
+        return await prismaClient.user.findUnique({
+            where : {
+                username : username
+            }
+        });
+    } catch (error) {
+        console.error("Error finding user by username:", error);
+        throw error;
+    }
+}
+
+
+export async function saveUser(name, email, username, password) {
     try {
         return await prismaClient.user.create({
             data: {
                 name: name,
                 email: email,
+                username : username,
                 password: password
             }
         });

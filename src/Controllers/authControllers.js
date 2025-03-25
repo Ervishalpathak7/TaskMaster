@@ -1,4 +1,4 @@
-import { findUserByEmail, saveUser } from "../repositories/userRepo.js";
+import { findUserByEmail, findUserByUsername, saveUser } from "../repositories/userRepo.js";
 import { generateAccessAndRefreshTokens, validateRefreshToken } from "../services/jwt.js";
 import passport from "passport";
 import { validateEmail } from "../utils/validateEmail.js";
@@ -34,15 +34,18 @@ export async function loginController(req, res, next) {
 // register controller
 export async function registerController(req , res){
     try {
-        const { name , email , password} = req.body;
-        if(!name || !email || !password) throw new Error("Invalid user data");
+        const { name , email , username , password} = req.body;
+        if(!name || !email || !password || !username) throw new Error("Invalid user data");
         if(!validateEmail(email)) return res.status(400).json({message : "Invalid Email"});
 
-        const existingUser = await findUserByEmail(email);
-        if(existingUser) return res.status(400).json({message : "Email Already Exist"});
+        const emailExist = await findUserByEmail(email);
+        if(emailExist) return res.status(400).json({message : "Email Already Exist"});
+
+        const usernameExist = await findUserByUsername(username);
+        if(usernameExist) return res.status(400).json({message : "Username Already Exist"});
 
         const hashedPassword = await bcrypt.hash(password, 10);
-        const user = await saveUser(name , email , hashedPassword);
+        const user = await saveUser(name , email ,username , hashedPassword);
         const tokens = await generateAccessAndRefreshTokens(user.id);
 
         res.json({ 
