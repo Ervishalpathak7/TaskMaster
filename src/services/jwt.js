@@ -1,15 +1,15 @@
 import jwt from "jsonwebtoken"
-import { findUserByID } from "../repositories/userRepo.js";
 import { saveRefreshToken } from "../repositories/refreshTokenRepo.js";
 import prismaClient from "../prisma/client.js";
+import { findUserByID } from "../repositories/userRepo.js";
 
 const privateKey = process.env.JWT_SECRET;
 const issuer = process.env.ISSUER;
 
 
-export function generateAccessToken(userId){
+export function generateAccessToken(user){
     return jwt.sign(
-        { id : userId},
+        { id : user.id , username : user.username },
         privateKey, 
         { expiresIn: "1h", issuer : issuer }
      )
@@ -23,16 +23,12 @@ export function generateRefreshToken(userId){
      )
 }
 
-export async function generateAccessAndRefreshTokens(userId) {
+export async function generateAccessAndRefreshTokens(user) {
   try {
-    const user = await findUserByID(userId);
-    if(!user) throw new Error("user not found with given id")
-    const accessToken = generateAccessToken(userId);
-    const refreshToken = generateRefreshToken(userId);
-
-    await  saveRefreshToken(refreshToken , userId);
+    const accessToken = generateAccessToken(user);
+    const refreshToken = generateRefreshToken(user.id);
+    await  saveRefreshToken(refreshToken , user.id);
     return { accessToken, refreshToken };
-
   } catch (error) {
     console.error("Something went wrong while generating the access token");
     throw error;
@@ -51,7 +47,8 @@ export async function validateRefreshToken(token){
       }
     });
     if (!refreshToken) return false;
-    return refreshToken.userId;
+    return await findUserByID(refreshToken.userId);
+
   } catch (error) {
     console.error("Error validating refresh token:", error);
     throw error;
