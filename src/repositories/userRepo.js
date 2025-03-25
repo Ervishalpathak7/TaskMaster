@@ -1,12 +1,12 @@
-import e from "express";
 import prismaClient from "../prisma/client.js";
 
+// Find user by email
 export async function findUserByEmail(email) {
     try {
         return await prismaClient.user.findUnique({
             where: {
                 email: email
-            }
+            },
         });
     } catch (error){
         console.error("error finding user", error);
@@ -32,6 +32,12 @@ export async function findUserByUsername(username){
         return await prismaClient.user.findUnique({
             where : {
                 username : username
+            },
+            select: {
+                email: true,
+                id: true,
+                name: true,
+                username: true
             }
         });
     } catch (error) {
@@ -66,6 +72,12 @@ export async function updateUser(username, data) {
                 name: data.name,
                 email: data.email,
                 username: data.username
+            } , 
+            select: {
+                email: true,
+                id: true,
+                name: true,
+                username: true
             }
         });
     } catch (error) {
@@ -95,12 +107,50 @@ export async function deleteUser(username) {
     }
 }
 
+// Get all users
+export async function getAllUsers() {
+    try {
+        return await prismaClient.user.findMany({
+            select: {
+                email: true,
+                id: true,
+                name: true,
+                username: true
+            }
+        });
+    } catch (error) {
+        console.error("Error getting all users", error);
+        throw error;
+    }
+}
+
 // delete all users
 export async function deleteAllUsers() {
     try {
         return await prismaClient.user.deleteMany();
     } catch (error) {
         console.error("Error deleting all users", error);
+        throw error;
+    }
+}
+
+// save projectInfo in user table
+export async function saveProjectInfo(userId, projectId) {
+    try {
+        await prismaClient.user.update({
+            where: {
+                id: userId
+            },
+            data: {
+                projects: {
+                    connect: {
+                        id: projectId
+                    }
+                }
+            }
+        });
+    } catch (error) {
+        console.error("Error saving project info", error);
         throw error;
     }
 }
