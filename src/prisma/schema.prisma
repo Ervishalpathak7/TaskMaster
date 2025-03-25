@@ -13,7 +13,6 @@ generator client {
 model User {
   id        String           @id @default(uuid())
   name      String
-  username  String           @unique
   email     String           @unique
   password  String
   createdAt DateTime         @default(now()) @map("created_at")
@@ -22,7 +21,6 @@ model User {
   ownedProjects Project[]   @relation("ProjectOwner")
   projects      Project[]   @relation("ProjectUsers")
   tasks         Task[]      @relation("TaskAssignees")
-  refreshTokens RefreshToken?
 }
 
 // Project model 
@@ -57,8 +55,5 @@ model RefreshToken {
   token     String        @unique 
   userId    String        @map("user_id") @unique
   createdAt DateTime      @default(now()) @map("created_at")
-  expiresAt DateTime?     @map("expires_at") // Optional expiration date
-
-  // Relationship
-  user      User          @relation(fields: [userId], references: [id])
+  expiresAt DateTime?     @map("expires_at") 
 }
