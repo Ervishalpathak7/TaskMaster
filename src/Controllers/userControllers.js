@@ -1,5 +1,5 @@
 import { deleteRefreshTokenByUserId } from "../repositories/refreshTokenRepo.js";
-import { deleteAllUsers, deleteUser, findUserByEmail, findUserByUsername, updateUser } from "../repositories/userRepo.js";
+import { deleteUser, findUserByEmail, findUserByUsername, updateUser } from "../repositories/userRepo.js";
 import { generateAccessAndRefreshTokens } from "../services/jwt.js";
 
 export async function getUserController(req , res){
@@ -8,7 +8,7 @@ export async function getUserController(req , res){
         const user = await findUserByUsername(username);
         if(!user) return res.status(404).json({message : "User not found"});
         user.password = undefined;
-        res.status(200).json({message : "user fetched successfullu" , user});
+        res.status(200).json({message : "user fetched successfully" , user});
     } catch (error) {
         res.status(500).json({message : error.message});
     }
@@ -29,7 +29,7 @@ export async function updateUserController(req , res) {
         const updatedUser = await updateUser(existingUsername , {name , email , username });
         updatedUser.password = undefined;
 
-        const tokens = await generateAccessAndRefreshTokens(updatedUser);
+        const tokens = await generateAccessAndRefreshTokens(updateUser.id);
 
         res.status(200).json({ 
             message: "User updated successfully", 

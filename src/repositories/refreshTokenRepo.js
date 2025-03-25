@@ -2,7 +2,6 @@ import prismaClient from "../prisma/client.js";
 
 export async function saveRefreshToken(token , userId) {
     try {
-
         const existingToken = await prismaClient.refreshToken.findFirst({
             where : {
                 userId : userId

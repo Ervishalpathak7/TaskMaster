@@ -23,11 +23,11 @@ export function generateRefreshToken(userId){
      )
 }
 
-export async function generateAccessAndRefreshTokens(user) {
+export async function generateAccessAndRefreshTokens(userId) {
   try {
-    const accessToken = generateAccessToken(user.id);
-    const refreshToken = generateRefreshToken(user.id);
-    await  saveRefreshToken(refreshToken , user.id);
+    const accessToken = generateAccessToken(userId);
+    const refreshToken = generateRefreshToken(userId);
+    await  saveRefreshToken(refreshToken , userId);
     return { accessToken, refreshToken };
   } catch (error) {
     console.error("Something went wrong while generating the access token");
