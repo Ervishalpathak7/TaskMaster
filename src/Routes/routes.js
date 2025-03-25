@@ -3,6 +3,7 @@ import authRouter from "./auth.js";
 import passport from "passport";
 import "../Auth/jwtStrategy.js"
 import projectRouter from "./project.js";
+import userRouter from "./user.js";
 
 const router = Router();
 
@@ -16,6 +17,7 @@ router.use((req, res, next) => {
 
 // Routes
 router.use('/auth', authRouter);
-router.use('/api' , projectRouter)
+router.use('/api/projects' , projectRouter)
+router.use('/api/users', userRouter)
 
 export default router;
