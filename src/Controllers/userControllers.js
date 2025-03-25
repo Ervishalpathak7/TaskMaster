@@ -1,5 +1,6 @@
-import { deleteUser, findUserByEmail, findUserByUsername, updateUser } from "../repositories/userRepo.js";
-
+import { deleteRefreshTokenByUserId } from "../repositories/refreshTokenRepo.js";
+import { deleteAllUsers, deleteUser, findUserByEmail, findUserByUsername, updateUser } from "../repositories/userRepo.js";
+import { generateAccessAndRefreshTokens } from "../services/jwt.js";
 
 export async function getUserController(req , res){
     try {
@@ -16,21 +17,23 @@ export async function getUserController(req , res){
 export async function updateUserController(req , res) {
     try {
         const existingUsername = req.user.username;
-        const { name , email , username , password } = req.body;
-        if(!name || !email || !username || !password) return res.status(400).json({message : "All fields are required"});
+        const { name , email , username } = req.body;
+        if(!name || !email || !username ) return res.status(400).json({message : "All fields are required"});
 
         const usernameUser = await findUserByUsername(username);
         if(usernameUser && usernameUser.username !== req.user.username) return res.status(400).json({message : "Username already exists"});
+
         const emailUser = await findUserByEmail(email);
         if(emailUser && emailUser.id !== req.user.id) return res.status(400).json({message : "Email already exists"});
 
-        const updatedUser = await updateUser(existingUsername , {name , email , username , password});
+        const updatedUser = await updateUser(existingUsername , {name , email , username });
         updatedUser.password = undefined;
+
         const tokens = await generateAccessAndRefreshTokens(updatedUser);
+
         res.status(200).json({ 
             message: "User updated successfully", 
-            user: 
-                { id: updatedUser.id, name: updatedUser.name, email: updatedUser.email },
+            user : updatedUser ,
             tokens 
         });
     } catch (error) {

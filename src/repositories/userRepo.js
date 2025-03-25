@@ -62,7 +62,11 @@ export async function updateUser(username, data) {
             where: {
                 username: username
             },
-            data: data
+            data : {
+                name: data.name,
+                email: data.email,
+                username: data.username
+            }
         });
     } catch (error) {
         console.error("Error updating user", error);
@@ -72,13 +76,31 @@ export async function updateUser(username, data) {
 
 export async function deleteUser(username) {
     try {
+        const user = await prismaClient.user.findUnique({
+            where: {
+                username: username
+            }
+        });
+
+        if (!user) throw new Error("User not found");
         return await prismaClient.user.delete({
             where: {
                 username: username
             }
         });
+        
     } catch (error) {
         console.error("Error deleting user", error);
+        throw error;
+    }
+}
+
+// delete all users
+export async function deleteAllUsers() {
+    try {
+        return await prismaClient.user.deleteMany();
+    } catch (error) {
+        console.error("Error deleting all users", error);
         throw error;
     }
 }

@@ -7,9 +7,9 @@ const privateKey = process.env.JWT_SECRET;
 const issuer = process.env.ISSUER;
 
 
-export function generateAccessToken(user){
+export function generateAccessToken(userId){
     return jwt.sign(
-        { id : user.id , username : user.username },
+        { id : userId },
         privateKey, 
         { expiresIn: "1h", issuer : issuer }
      )
@@ -25,7 +25,7 @@ export function generateRefreshToken(userId){
 
 export async function generateAccessAndRefreshTokens(user) {
   try {
-    const accessToken = generateAccessToken(user);
+    const accessToken = generateAccessToken(user.id);
     const refreshToken = generateRefreshToken(user.id);
     await  saveRefreshToken(refreshToken , user.id);
     return { accessToken, refreshToken };

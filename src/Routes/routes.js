@@ -1,9 +1,8 @@
 import { Router } from "express";
 import authRouter from "./auth.js";
-import passport from "passport";
-import "../Auth/jwtStrategy.js"
 import projectRouter from "./project.js";
 import userRouter from "./user.js";
+import passport from "../Auth/jwtStrategy.js"
 
 const router = Router();
 
