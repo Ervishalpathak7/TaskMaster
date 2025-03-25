@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { createProjectController, deleteProjectController, getAllProjectController, getLoggedInUserProjectController, getProjectController, updateProjectController } from "../Controllers/projectControllers.js";
+import { addUsersToProjectController, createProjectController, deleteProjectController, getAllProjectController, getLoggedInUserProjectController, getProjectController, updateProjectController } from "../Controllers/projectControllers.js";
 
 const projectRouter = Router();
 
@@ -24,6 +24,9 @@ projectRouter.patch('/:id' , updateProjectController)
 
 // Delete project
 projectRouter.delete('/:id' , deleteProjectController)
+
+// Add member to project
+projectRouter.post('/:id/addMember' , addUsersToProjectController)
 
 
 export default projectRouter;

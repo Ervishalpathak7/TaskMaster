@@ -128,3 +128,46 @@ export async function deleteAllProjects(){
         throw error;
     }
 }
+
+// Add member to project
+export async function addUsersToProject(projectId , userEmail , ownerId){
+    try {
+        const project = await prismaClient.project.findFirst({
+            where : {
+                id : projectId,
+            }
+        });
+        if(!project) throw new Error("No project Found");
+
+        if(project.ownerId !== ownerId) throw new Error("You do not have permission to add member to this project");
+
+        const user = await prismaClient.user.findFirst({
+            where : {
+                email : userEmail
+            }
+        });
+
+        if(!user) throw new Error("No user found");
+
+        await prismaClient.project.update({
+            where : {
+                id : projectId
+            },
+            data : {
+                users : {
+                    connect : {
+                        id : user.id
+                    }
+                }
+            }
+        });
+        
+    } catch (error) {
+        console.error("error adding member to project" , error)
+        throw error;
+    }
+
+
+
+
+}
