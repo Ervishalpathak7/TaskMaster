@@ -16,7 +16,7 @@ router.use((req, res, next) => {
 
 // Routes
 router.use('/auth', authRouter);
-router.use('/api/projects' , projectRouter)
+router.use('/api/projects' , [projectRouter])
 router.use('/api/users', userRouter)
 
 export default router;
