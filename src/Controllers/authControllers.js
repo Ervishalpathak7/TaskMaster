@@ -4,6 +4,7 @@ import passport from "passport";
 import { validateEmail } from "../utils/validateEmail.js";
 import bcrypt from "bcryptjs";
 import "../Auth/localStratergy.js"
+import { deleteRefreshToken } from "../repositories/refreshTokenRepo.js";
 
 
 // login controller
@@ -63,7 +64,7 @@ export async function refreshTokenController( req , res ){
         const userId = await validateRefreshToken(refreshToken);
         if(!userId) return res.status(401).json({message : "unauthorized"});
         const tokens = await generateAccessAndRefreshTokens(userId);
-        res.status(200).json({message : "User logged in successfully" ,tokens});
+        res.status(200).json({message : "access-tokens generated successfully" ,tokens});
     } catch (error) {
         res.status(500).json({message : error.message})
     }
@@ -79,5 +80,4 @@ export async function logoutController(req , res){
     } catch (error) {
         res.status(500).json({message : error.message})
     }
-    
 } 

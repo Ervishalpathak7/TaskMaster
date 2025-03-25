@@ -37,6 +37,14 @@ export async function saveRefreshToken(token , userId) {
 // Delete refresh token
 export async function deleteRefreshToken(token){
     try {
+
+        const existingToken = await prismaClient.refreshToken.findFirst({
+            where : {
+                token : token
+            }
+        });
+
+        if(!existingToken) throw new Error("Invalid Token");
         await prismaClient.refreshToken.delete({
             where : {
                 token : token
@@ -46,5 +54,4 @@ export async function deleteRefreshToken(token){
         console.error("error while deleting refresh token" , error);
         throw error
     }
-    
 }
