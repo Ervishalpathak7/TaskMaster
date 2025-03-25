@@ -1,5 +1,6 @@
 import passport from "passport";
 import { Strategy as JwtStrategy, ExtractJwt } from "passport-jwt";
+import { findUserByID } from "../repositories/userRepo.js";
 
 const opts = {
     jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
@@ -7,12 +8,16 @@ const opts = {
     issuer: process.env.issuer,
 };
 
-export default passport.use(
-    new JwtStrategy(opts, (jwt_payload, done) => {
+passport.use(
+    new JwtStrategy(opts, async (jwt_payload, done) => {
         if (jwt_payload) {
-            return done(null, { id: jwt_payload.id, username: jwt_payload.username });
+            const user = await findUserByID(jwt_payload.id);
+            if (!user) return done(null, false);
+            return done(null, { id: user.id, username: user.username });
         } else {
             return done(null, false);
         }
     })
 );
+
+export default passport;
