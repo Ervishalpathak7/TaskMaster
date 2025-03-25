@@ -18,7 +18,7 @@ export async function loginController(req, res, next) {
              return res.status(401).json({ message: info ? info.message : "Authentication failed" });
          }
          user.password = undefined;
-         const tokens = await generateAccessAndRefreshTokens(user.id);
+         const tokens = await generateAccessAndRefreshTokens(user);
          return res.json({ 
              message: "User logged in successfully", 
              user,
@@ -46,7 +46,8 @@ export async function registerController(req , res){
 
         const hashedPassword = await bcrypt.hash(password, 10);
         const user = await saveUser(name , email ,username , hashedPassword);
-        const tokens = await generateAccessAndRefreshTokens(user.id);
+        user.password = undefined;
+        const tokens = await generateAccessAndRefreshTokens(user);
 
         res.json({ 
             message: "User registered successfully", 
@@ -64,9 +65,9 @@ export async function registerController(req , res){
 export async function refreshTokenController( req , res ){
     try {
         const { refreshToken } = req.body;
-        const userId = await validateRefreshToken(refreshToken);
-        if(!userId) return res.status(401).json({message : "unauthorized"});
-        const tokens = await generateAccessAndRefreshTokens(userId);
+        const user = await validateRefreshToken(refreshToken);
+        if(!user) return res.status(401).json({message : "unauthorized"});
+        const tokens = await generateAccessAndRefreshTokens(user);
         res.status(200).json({message : "access-tokens generated successfully" ,tokens});
     } catch (error) {
         res.status(500).json({message : error.message})
