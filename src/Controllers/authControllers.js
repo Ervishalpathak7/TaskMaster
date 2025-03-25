@@ -17,7 +17,6 @@ export async function loginController(req, res, next) {
          if (!user) {
              return res.status(401).json({ message: info ? info.message : "Authentication failed" });
          }
-         user.password = undefined;
          const tokens = await generateAccessAndRefreshTokens(user.id);
          return res.json({ 
              message: "User logged in successfully", 
@@ -45,8 +44,7 @@ export async function registerController(req , res){
         if(usernameExist) return res.status(400).json({message : "Username Already Exist"});
 
         const hashedPassword = await bcrypt.hash(password, 10);
-        const user = await saveUser(name , email ,username , hashedPassword);
-        user.password = undefined;
+        const user = await saveUser(name , email ,username , hashedPassword)
         const tokens = await generateAccessAndRefreshTokens(user.id);
 
         res.json({ 

@@ -12,7 +12,7 @@ export default passport.use(
         if (!finduser) throw new Error("No User Found");
         const isPasswordValid = await comparePassword(password , finduser.password);
         if (!isPasswordValid) throw new Error("Invalid Credentials");
-        done(null, finduser);
+        done(null, { id: finduser.id, username: finduser.username });
       } catch (error) {
         done(error, null);
       }
