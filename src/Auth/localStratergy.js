@@ -9,7 +9,7 @@ export default passport.use(
     async (email, password, done) => {
       try {
         let finduser = await findUserByEmail(email);
-        if (!finduser) throw new Error("Invalid Credentials");
+        if (!finduser) throw new Error("No User Found");
         const isPasswordValid = await comparePassword(password , finduser.password);
         if (!isPasswordValid) throw new Error("Invalid Credentials");
         done(null, finduser);

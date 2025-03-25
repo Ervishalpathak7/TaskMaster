@@ -9,10 +9,8 @@ const router = Router();
 // Authentication Middleware
 router.use((req, res, next) => {
     const excludedRoutes = ["/auth"];
-    if (excludedRoutes.includes(req.path)) {
-        return next();
-    }
-    return passport.authenticate("jwt", { session: false })(req, res, next);
+    if (req.path.includes(excludedRoutes)) return next();
+    passport.authenticate("jwt", { session: false })(req, res, next);
 });
 
 

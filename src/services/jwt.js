@@ -42,7 +42,7 @@ export async function generateAccessAndRefreshTokens(userId) {
 
 export async function validateRefreshToken(token){
   try {
-    const refreshToken = await prismaClient.refreshTokens.findUnique({
+    const refreshToken = await prismaClient.refreshToken.findUnique({
       where: {
         token: token
       },

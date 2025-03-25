@@ -3,14 +3,14 @@ import prismaClient from "../prisma/client.js";
 export async function saveRefreshToken(token , userId) {
     try {
 
-        const existingToken = await prismaClient.refreshTokens.findFirst({
+        const existingToken = await prismaClient.refreshToken.findFirst({
             where : {
                 userId : userId
             }
         })
 
         if(existingToken) {
-            await prismaClient.refreshTokens.update({
+            await prismaClient.refreshToken.update({
                 where : {
                     userId : userId
                 },
@@ -19,7 +19,7 @@ export async function saveRefreshToken(token , userId) {
                 }
             })
         } else {
-            await prismaClient.refreshTokens.create({
+            await prismaClient.refreshToken.create({
                 data : {
                     token : token,
                     userId : userId
@@ -29,6 +29,21 @@ export async function saveRefreshToken(token , userId) {
 
     } catch (error) {
         console.error("error while saving refresh token" , error);
+        throw error
+    }
+    
+}
+
+// Delete refresh token
+export async function deleteRefreshToken(token){
+    try {
+        await prismaClient.refreshToken.delete({
+            where : {
+                token : token
+            }
+        })
+    } catch (error) {
+        console.error("error while deleting refresh token" , error);
         throw error
     }
     

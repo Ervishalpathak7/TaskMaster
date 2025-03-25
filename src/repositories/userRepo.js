@@ -3,7 +3,7 @@ import prismaClient from "../prisma/client.js";
 
 export async function findUserByEmail(email) {
     try {
-        return await prismaClient.users.findUnique({
+        return await prismaClient.user.findUnique({
             where: {
                 email: email
             }
@@ -17,7 +17,7 @@ export async function findUserByEmail(email) {
 
 export async function findUserByID(userId){
     try {
-        return await prismaClient.users.findUnique({
+        return await prismaClient.user.findUnique({
             where : {
                 id : userId
             }
@@ -30,7 +30,7 @@ export async function findUserByID(userId){
 
 export async function saveUser(name, email, password) {
     try {
-        return await prismaClient.users.create({
+        return await prismaClient.user.create({
             data: {
                 name: name,
                 email: email,
@@ -46,9 +46,9 @@ export async function saveUser(name, email, password) {
 
 export async function deleteAll() {
     try {
-        return await prismaClient.users.deleteMany();
+        return await prismaClient.user.deleteMany();
     } catch (error) {
-        console.error("Error deleting all users:", error);
+        console.error("Error deleting all user:", error);
         throw error;
     }
 }
@@ -56,9 +56,9 @@ export async function deleteAll() {
 export async function getAllUsers(){
 
     try {
-        return await prismaClient.users.findMany();
+        return await prismaClient.user.findMany();
     } catch (error) {
-        console.error("Error fetching all users:", error);
+        console.error("Error fetching all user:", error);
         throw error;
     }    
 }
