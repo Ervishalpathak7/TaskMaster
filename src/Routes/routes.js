@@ -8,7 +8,7 @@ const router = Router();
 
 // Authentication Middleware
 router.use((req, res, next) => {
-    const excludedRoutes = ["/login", "/register", "/refresh"];
+    const excludedRoutes = ["/auth"];
     if (excludedRoutes.includes(req.path)) {
         return next();
     }
@@ -17,7 +17,7 @@ router.use((req, res, next) => {
 
 
 // Routes
-router.use('/', authRouter);
+router.use('/auth', authRouter);
 router.use('/api' , projectRouter)
 
 export default router;

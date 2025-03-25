@@ -1,45 +1,64 @@
+// prisma/schema.prisma
+
 datasource db {
-  url      = env("DATABASE_URL")
   provider = "postgresql"
+  url      = env("DATABASE_URL")
 }
 
 generator client {
   provider = "prisma-client-js"
 }
 
-model Users {
-  id        String   @id @default(uuid()) 
-  createdAt DateTime @default(now())
-  email     String   @unique
+// User model
+model User {
+  id        String           @id @default(uuid())
   name      String
-  password  String 
-  projects  Projects[]
-  tasks     Tasks[] @relation("TaskAssignees")
-  RefreshToken RefreshTokens?
+  username  String           @unique
+  email     String           @unique
+  password  String
+  createdAt DateTime         @default(now()) @map("created_at")
+
+  // Relationships
+  ownedProjects Project[]   @relation("ProjectOwner")
+  projects      Project[]   @relation("ProjectUsers")
+  tasks         Task[]      @relation("TaskAssignees")
+  refreshTokens RefreshToken?
 }
 
-model Projects {
-  id          String @id @default(uuid())
+// Project model 
+model Project {
+  id          String       @id @default(uuid())
   name        String
   description String?
-  tasks       Tasks[]
-  owner       Users   @relation(fields: [ownerId], references: [id], onDelete: Cascade)
-  ownerId     String
+  ownerId     String       @map("owner_id")
+  createdAt   DateTime     @default(now()) @map("created_at")
+
+  owner       User         @relation("ProjectOwner", fields: [ownerId], references: [id])
+  users       User[]       @relation("ProjectUsers")
+  tasks       Task[]
 }
 
-model Tasks {
-  id          Int    @id @default(autoincrement())
-  name        String
+// Task model 
+model Task {
+  id          String      @id @default(uuid())
+  projectId   String      @map("project_id")
+  title       String
   description String?
-  projectRelation Projects @relation(fields: [projectId], references: [id], onDelete: Cascade)
-  projectId   String
-  assignees   Users[] @relation("TaskAssignees")
-  deadline    DateTime
+  status      String      @default("To Do")
+  createdAt   DateTime    @default(now()) @map("created_at")
+  dueDate     DateTime?   @map("due_date")
+  project     Project     @relation(fields: [projectId], references: [id])
+  assignees   User[]      @relation("TaskAssignees")
 }
 
-model RefreshTokens {
-  id     String  @id @default(uuid())
-  user   Users   @relation(fields: [userId], references: [id], onDelete: Cascade)
-  token  String   @unique
-  userId String   @unique
+// New RefreshToken model
+model RefreshToken {
+  id        String        @id @default(uuid())
+  token     String        @unique 
+  userId    String        @map("user_id") @unique
+  createdAt DateTime      @default(now()) @map("created_at")
+  expiresAt DateTime?     @map("expires_at") // Optional expiration date
+
+  // Relationship
+  user      User          @relation(fields: [userId], references: [id])
 }
