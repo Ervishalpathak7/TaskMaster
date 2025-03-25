@@ -1,3 +1,4 @@
+import e from "express";
 import prismaClient from "../prisma/client.js";
 
 export async function findUserByEmail(email) {
@@ -10,7 +11,6 @@ export async function findUserByEmail(email) {
     } catch (error){
         console.error("error finding user", error);
         throw error;
-        
     }
 }
 
@@ -56,21 +56,29 @@ export async function saveUser(name, email, username, password) {
     }
 }
 
-export async function deleteAll() {
+export async function updateUser(username, data) {
     try {
-        return await prismaClient.user.deleteMany();
+        return await prismaClient.user.update({
+            where: {
+                username: username
+            },
+            data: data
+        });
     } catch (error) {
-        console.error("Error deleting all user:", error);
+        console.error("Error updating user", error);
         throw error;
     }
 }
 
-export async function getAllUsers(){
-
+export async function deleteUser(username) {
     try {
-        return await prismaClient.user.findMany();
+        return await prismaClient.user.delete({
+            where: {
+                username: username
+            }
+        });
     } catch (error) {
-        console.error("Error fetching all user:", error);
+        console.error("Error deleting user", error);
         throw error;
-    }    
+    }
 }

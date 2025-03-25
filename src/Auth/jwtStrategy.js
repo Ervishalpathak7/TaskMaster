@@ -1,4 +1,4 @@
-import passport, { use } from "passport";
+import passport from "passport";
 import { Strategy as JwtStrategy, ExtractJwt } from "passport-jwt";
 
 const opts = {
