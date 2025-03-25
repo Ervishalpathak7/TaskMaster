@@ -1,4 +1,4 @@
-import passport from "passport";
+import passport, { use } from "passport";
 import { Strategy as JwtStrategy, ExtractJwt } from "passport-jwt";
 
 const opts = {
@@ -10,7 +10,7 @@ const opts = {
 export default passport.use(
     new JwtStrategy(opts, (jwt_payload, done) => {
         if (jwt_payload) {
-            return done(null, { id: jwt_payload.id, email: jwt_payload.email, role: jwt_payload.role });
+            return done(null, { id: jwt_payload.id, username: jwt_payload.username });
         } else {
             return done(null, false);
         }
