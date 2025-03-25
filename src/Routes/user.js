@@ -1,11 +1,10 @@
 import { Router } from "express";
+import { getUserController } from "../Controllers/userControllers.js";
 
 const userRouter = Router();
 
 // Get user by Id
-userRouter.get("/:id", (req, res) => {
-    res.send("User get Route");
-})
+userRouter.get("/:username", getUserController)
 
 // Update user by Id
 userRouter.put("/:id", (req, res) => { 

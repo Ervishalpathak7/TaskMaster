@@ -1,6 +1,5 @@
 import prismaClient from "../prisma/client.js";
 
-
 export async function findUserByEmail(email) {
     try {
         return await prismaClient.user.findUnique({
@@ -41,7 +40,6 @@ export async function findUserByUsername(username){
     }
 }
 
-
 export async function saveUser(name, email, username, password) {
     try {
         return await prismaClient.user.create({
@@ -49,13 +47,12 @@ export async function saveUser(name, email, username, password) {
                 name: name,
                 email: email,
                 username : username,
-                password: password
+                password: password,
             }
         });
     } catch (error) {
         console.error("error saving user " , error)
         throw error;
-        
     }
 }
 
