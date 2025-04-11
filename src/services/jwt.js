@@ -47,6 +47,7 @@ export async function validateRefreshToken(token){
       }
     });
     if (!refreshToken) return false;
+    
     return await findUserByID(refreshToken.userId);
 
   } catch (error) {

@@ -4,12 +4,31 @@ async function validateProjectOwnership(userId, projectId) {
     const project = await prismaClient.project.findFirst({
         where: {
             id: projectId,
-            ownerId: userId
+            users: {
+                some: {
+                    id: userId
+                }
+            }
         }
     });
     if (!project) throw new Error("Project not found or access denied");
     return project;
 }
+
+export async function getTasks(userId, projectId) {
+    try {
+        await validateProjectOwnership(userId, projectId);
+        return await prismaClient.task.findMany({
+            where: {
+                projectId
+            }
+        });
+    } catch (error) {
+        console.error("Error fetching tasks", error);
+        throw error;
+    }
+}
+
 
 export async function createTask(projectId, userId, name, description, deadline, assignees) {
     try {
