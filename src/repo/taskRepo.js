@@ -93,15 +93,29 @@ const updateTask = async (userId , taskId , task) => {
     }
 }
 
+const getLoggedInUserProjects = async (userId) => {
+    try {
+        // Check if userId is provided
+        if(!userId) throw new Error("Please provide an userId");
 
+        // Get all projects of the logged in user
+        const projects = await Task.find({ createdBy: userId });
+        if (!projects) throw new Error("No projects found for this user");
 
-
+        return projects;
+        
+    } catch (error) {
+        console.error(`Error getting logged in user projects: ${error.message}`);
+        throw new Error(error.message);
+    }
+}
 
 const taskRepo = {
     createTask,
     removeTask,
     getTaskInfo,
-    updateTask
+    updateTask,
+    getLoggedInUserProjects
 }
 
 export default taskRepo;

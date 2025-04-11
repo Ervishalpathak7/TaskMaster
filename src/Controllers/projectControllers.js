@@ -1,6 +1,4 @@
 import taskRepo from "../repo/taskRepo.js";
-import { addUsersToProject, deleteAllProjects, getAllProjects, getLoggedInUserProjects } from "../repositories/projectRepo.js";
-import { validateEmail } from "../utils/validateEmail.js";
 
 // Create project
 export async function createProjectController(req, res){
@@ -63,7 +61,7 @@ export async function updateProjectController(req , res){
 export async function getLoggedInUserProjectController(req , res){
     try {
         const userId = req.user.id;
-        const projects = await getLoggedInUserProjects(userId);
+        const projects = await taskRepo.getLoggedInUserProjects(userId);
         res.status(200).json({message : "projects fetched successfully" , projects});
     } catch (error) {
         res.status(500).json({message : error.message});
