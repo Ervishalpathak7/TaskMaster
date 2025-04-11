@@ -81,11 +81,6 @@ const updateUser = async (id, updates) => {
 
         // Check if updates are provided
         if(!updates) throw new Error("Please provide updates");
-
-        // Check if updates are valid
-        const validUpdates = ["name", "email"];
-        const isValidUpdate = Object.keys(updates).every((update) => validUpdates.includes(update));
-        if (!isValidUpdate) throw new Error("Invalid updates");
         
         // Check if user exists
         const existingUser = await User.findById(id);
@@ -95,7 +90,7 @@ const updateUser = async (id, updates) => {
 
         // Check if email is being updated
         if(updates.email && updates.email !== existingUser.email){
-            const getUserByEmail = User.findOne({ email: updates.email });
+            const getUserByEmail = await User.findOne({ email: updates.email });
             if (getUserByEmail) {
                 throw new Error("Email already exists");
             }
