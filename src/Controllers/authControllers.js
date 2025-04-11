@@ -1,10 +1,8 @@
-import { findUserByEmail, findUserByUsername, saveUser } from "../repositories/userRepo.js";
 import { generateAccessAndRefreshTokens, validateRefreshToken } from "../services/jwt.js";
 import passport from "passport";
-import { validateEmail } from "../utils/validateEmail.js";
-import bcrypt from "bcryptjs";
 import "../Auth/localStratergy.js"
 import { deleteRefreshToken } from "../repositories/refreshTokenRepo.js";
+import userRepo from "../repo/userRepo.js";
 
 
 // login controller
@@ -33,24 +31,17 @@ export async function loginController(req, res, next) {
 // register controller
 export async function registerController(req , res){
     try {
-        const { name , email , username , password} = req.body;
-        if(!name || !email || !password || !username) throw new Error("Invalid user data");
-        if(!validateEmail(email)) return res.status(400).json({message : "Invalid Email"});
+        // Check the user details
+        const { name , email , password} = req.body;
+        if(!name || !email || !password ) throw new Error("Invalid user data");
 
-        const emailExist = await findUserByEmail(email);
-        if(emailExist) return res.status(400).json({message : "Email Already Exist"});
+        // Create new user
+        const newUser = await userRepo.createUser( name, email, password );
 
-        const usernameExist = await findUserByUsername(username);
-        if(usernameExist) return res.status(400).json({message : "Username Already Exist"});
-
-        const hashedPassword = await bcrypt.hash(password, 10);
-        const user = await saveUser(name , email ,username , hashedPassword)
-        const tokens = await generateAccessAndRefreshTokens(user.id);
-
+        const tokens = await generateAccessAndRefreshTokens(newUser.id);
         res.json({ 
             message: "User registered successfully", 
-            user: 
-                { id: user.id, name: user.name, email: user.email },
+            user: newUser,
             tokens 
         });
 
