@@ -1,14 +1,20 @@
+import taskRepo from "../repo/taskRepo.js";
 import { addUsersToProject, deleteAllProjects, getAllProjects, getLoggedInUserProjects, getprojectInfo, removeProject, saveProject, updateProject } from "../repositories/projectRepo.js";
 import { validateEmail } from "../utils/validateEmail.js";
 
 // Create project
 export async function createProjectController(req, res){
     try {
-        const { name , description} = req.body;
-        if(!name || !description) throw new Error("missing project details");
+        const { title , description , status } = req.body;
+
+        // Check the project details
+        if(!title || !description ) throw new Error("missing project details");
+
         const userId = req.user.id;
-        const project = await saveProject(name, description, userId);
+        const project = await taskRepo.createTask(userId , { title , description , status});
+
         res.status(201).json({message : "Project Created Successfully", project })
+        
     } catch (error) {
         res.status(401).json({message : error.message})
     }
