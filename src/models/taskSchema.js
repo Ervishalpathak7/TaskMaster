@@ -1,4 +1,4 @@
-import { Schema , model } from "mongoose";
+import mongoose, { Schema , model } from "mongoose";
 
 const taskSchema = new Schema({
     title : {
@@ -18,7 +18,7 @@ const taskSchema = new Schema({
         enum : ["Pending", "In Progress", "Completed"],
         default : "Pending"
     },
-    userId : {
+    createdBy : {
         type : mongoose.Schema.Types.ObjectId,
         ref : "User",
         required : true
